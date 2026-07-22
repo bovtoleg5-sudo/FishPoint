@@ -129,9 +129,10 @@ function App() {
 
 
       <Map
-        catches={catches}
-        setLocation={setLocation}
-      />
+  catches={catches}
+  setLocation={setLocation}
+  setPlace={setPlace}
+/>
 
 
 
