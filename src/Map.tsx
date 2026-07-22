@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import type { LatLngExpression } from 'leaflet'
 
 
 type Catch = {
@@ -19,73 +20,61 @@ type Props = {
 
 function Map({ catches }: Props) {
 
+  const center: LatLngExpression = [49.9935, 36.2304]
+
+
   return (
+    <MapContainer
+      center={center}
+      zoom={12}
+      style={{
+        height: '400px',
+        width: '100%'
+      }}
+    >
 
-    <div style={{ height: '400px', width: '100%' }}>
-
-      <MapContainer
-        center={[49.9935, 36.2304]}
-        zoom={12}
-        style={{
-          height: '400px',
-          width: '100%'
-        }}
-      >
-
-        <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      <TileLayer
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
 
-        {catches.map((item, index) => {
+      {catches.map((item, index) => {
 
-          if (!item.location) return null
-
-
-          const position = item.location
-            .split(',')
-            .map(Number) as [number, number]
+        if (!item.location) {
+          return null
+        }
 
 
-          return (
-
-            <Marker
-              key={index}
-              position={position}
-            >
-
-              <Popup>
-
-                <b>
-                  🐟 {item.fishName}
-                </b>
-
-                <br />
-
-                ⚖️ {item.weight} кг
-
-                <br />
-
-                📍 {item.place}
-
-                <br />
-
-                📅 {item.date}
-
-              </Popup>
-
-            </Marker>
-
-          )
-
-        })}
+        const position = item.location
+          .split(',')
+          .map(Number) as [number, number]
 
 
-      </MapContainer>
+        return (
+          <Marker
+            key={index}
+            position={position}
+          >
 
-    </div>
+            <Popup>
 
+              🐟 {item.fishName}
+              <br />
+              ⚖️ {item.weight} кг
+              <br />
+              📍 {item.place}
+              <br />
+              📅 {item.date}
+
+            </Popup>
+
+          </Marker>
+        )
+
+      })}
+
+
+    </MapContainer>
   )
 }
 
