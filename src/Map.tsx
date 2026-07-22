@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import type { LatLngExpression } from 'leaflet'
 
 
 type Catch = {
@@ -19,9 +20,12 @@ type Props = {
 
 function Map({ catches }: Props) {
 
+  const center: LatLngExpression = [49.9935, 36.2304]
+
+
   return (
     <MapContainer
-      center={[49.9935, 36.2304]}
+      center={center}
       zoom={12}
       style={{
         height: '400px',
@@ -36,9 +40,7 @@ function Map({ catches }: Props) {
 
       {catches.map((item, index) => {
 
-        if (!item.location) {
-          return null
-        }
+        if (!item.location) return null
 
 
         const position = item.location
@@ -56,7 +58,7 @@ function Map({ catches }: Props) {
 
               🐟 {item.fishName}
               <br />
-              ⚖️ {item.weight} кг
+              ⚖️ Вес: {item.weight} кг
               <br />
               📍 {item.place}
               <br />
@@ -68,7 +70,6 @@ function Map({ catches }: Props) {
         )
 
       })}
-
 
     </MapContainer>
   )
