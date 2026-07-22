@@ -32,7 +32,6 @@ function App() {
   })
 
 
-
   function saveCatches(data: Catch[]) {
 
     setCatches(data)
@@ -47,7 +46,6 @@ function App() {
 
 
   function addCatch() {
-
 
     if (!fishName || !weight || !place || !date) {
       return
@@ -66,12 +64,10 @@ function App() {
     }
 
 
-
     saveCatches([
       ...catches,
       newCatch
     ])
-
 
 
     setFishName('')
@@ -85,7 +81,6 @@ function App() {
 
 
 
-
   function deleteCatch(index:number) {
 
     const updated = catches.filter(
@@ -95,7 +90,6 @@ function App() {
     saveCatches(updated)
 
   }
-
 
 
 
@@ -123,11 +117,9 @@ function App() {
 
 
 
-
   return (
 
     <div className="app">
-
 
       <h1>🎣 Fishpoint</h1>
 
@@ -136,72 +128,78 @@ function App() {
       </p>
 
 
-      <Map catches={catches}/>
-
-<div className="stats">
-
-  <div className="stat-card">
-    🐟
-    <h3>{catches.length}</h3>
-    <p>Уловов</p>
-  </div>
+      <Map
+        catches={catches}
+        setLocation={setLocation}
+      />
 
 
-  <div className="stat-card">
-    ⚖️
-    <h3>
-      {
-        catches.reduce(
-          (sum, item) => sum + Number(item.weight),
-          0
-        )
-      } кг
-    </h3>
-    <p>Общий вес</p>
-  </div>
+
+      <div className="stats">
+
+        <div className="stat-card">
+          🐟
+          <h3>{catches.length}</h3>
+          <p>Уловов</p>
+        </div>
 
 
-  <div className="stat-card">
-    🏆
-    <h3>
-      {
-        catches.length > 0
-        ? Math.max(
-            ...catches.map(
-              item => Number(item.weight)
-            )
-          )
-        : 0
-      } кг
-    </h3>
-    <p>Трофей</p>
-  </div>
+        <div className="stat-card">
+          ⚖️
+          <h3>
+            {
+              catches.reduce(
+                (sum,item)=>sum + Number(item.weight),
+                0
+              )
+            } кг
+          </h3>
+          <p>Общий вес</p>
+        </div>
 
 
-  <div className="stat-card">
-    📍
-    <h3>
-      {
-        new Set(
-          catches.map(
-            item => item.place
-          )
-        ).size
-      }
-    </h3>
-    <p>Мест</p>
-  </div>
+        <div className="stat-card">
+          🏆
+          <h3>
+            {
+              catches.length > 0
+              ? Math.max(
+                  ...catches.map(
+                    item=>Number(item.weight)
+                  )
+                )
+              : 0
+            } кг
+          </h3>
+          <p>Трофей</p>
+        </div>
 
 
-</div>
+        <div className="stat-card">
+          📍
+          <h3>
+            {
+              new Set(
+                catches.map(
+                  item=>item.place
+                )
+              ).size
+            }
+          </h3>
+          <p>Мест</p>
+        </div>
+
+
+      </div>
+
+
+
 
       <div className="card">
-
 
         <h2>
           ➕ Добавить улов
         </h2>
-
 
 
         <input
@@ -213,7 +211,6 @@ function App() {
         />
 
 
-
         <input
           placeholder="Вес (кг)"
           value={weight}
@@ -221,7 +218,6 @@ function App() {
             e=>setWeight(e.target.value)
           }
         />
-
 
 
         <input
@@ -233,7 +229,6 @@ function App() {
         />
 
 
-
         <input
           type="date"
           value={date}
@@ -243,13 +238,11 @@ function App() {
         />
 
 
-
         <input
           type="file"
           accept="image/*"
           onChange={uploadPhoto}
         />
-
 
 
         <button onClick={addCatch}>
@@ -267,64 +260,59 @@ function App() {
       </h2>
 
 
-
       <div className="catches">
 
 
-      {catches.map((item,index)=>(
+        {catches.map((item,index)=>(
 
-
-        <div className="catch-card" key={index}>
-
-
-          {item.photo &&
-
-            <img
-              src={item.photo}
-              alt="fish"
-            />
-
-          }
-
-
-
-          <h3>
-            🐟 {item.fishName}
-          </h3>
-
-
-          <p>
-            ⚖️ Вес: {item.weight} кг
-          </p>
-
-
-          <p>
-            📍 {item.place}
-          </p>
-
-
-          <p>
-            📅 {item.date}
-          </p>
-
-
-          <p>
-            🗺️ {item.location}
-          </p>
-
-
-
-          <button
-            onClick={() => deleteCatch(index)}
+          <div
+            className="catch-card"
+            key={index}
           >
-            🗑️ Удалить
-          </button>
+
+            {item.photo &&
+              <img
+                src={item.photo}
+                alt="fish"
+              />
+            }
 
 
-        </div>
+            <h3>
+              🐟 {item.fishName}
+            </h3>
 
 
-      ))}
+            <p>
+              ⚖️ Вес: {item.weight} кг
+            </p>
+
+
+            <p>
+              📍 {item.place}
+            </p>
+
+
+            <p>
+              📅 {item.date}
+            </p>
+
+
+            <p>
+              🗺️ {item.location}
+            </p>
+
+
+            <button
+              onClick={() => deleteCatch(index)}
+            >
+              🗑️ Удалить
+            </button>
+
+
+          </div>
+
+        ))}
 
 
       </div>

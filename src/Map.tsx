@@ -1,6 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import type { LatLngExpression } from 'leaflet'
+import { useState } from 'react'
 
 
 type Catch = {
@@ -15,21 +15,58 @@ type Catch = {
 
 type Props = {
   catches: Catch[]
+  setLocation: (location: string) => void
 }
 
 
-function Map({ catches }: Props) {
+function LocationMarker({ setLocation }: { setLocation: (location: string) => void }) {
 
-  const center: LatLngExpression = [49.9935, 36.2304]
+  const [position, setPosition] = useState<[number, number] | null>(null)
+
+
+  useMapEvents({
+
+    click(e) {
+
+      const coords: [number, number] = [
+        e.latlng.lat,
+        e.latlng.lng
+      ]
+
+      setPosition(coords)
+
+      setLocation(
+        `${coords[0]}, ${coords[1]}`
+      )
+
+    }
+
+  })
+
+
+  return position ? (
+    <Marker position={position}>
+      <Popup>
+        🎣 Место улова выбрано
+      </Popup>
+    </Marker>
+  ) : null
+
+}
+
+
+
+function Map({ catches, setLocation }: Props) {
 
 
   return (
+
     <MapContainer
-      center={center}
+      center={[49.9935, 36.2304]}
       zoom={12}
       style={{
-        height: '400px',
-        width: '100%'
+        height:'400px',
+        width:'100%'
       }}
     >
 
@@ -38,17 +75,24 @@ function Map({ catches }: Props) {
       />
 
 
-      {catches.map((item, index) => {
+      <LocationMarker
+        setLocation={setLocation}
+      />
 
-        if (!item.location) return null
+
+      {catches.map((item,index)=>{
+
+        if(!item.location) return null
 
 
-        const position = item.location
+        const position =
+          item.location
           .split(',')
-          .map(Number) as [number, number]
+          .map(Number) as [number,number]
 
 
         return (
+
           <Marker
             key={index}
             position={position}
@@ -57,21 +101,23 @@ function Map({ catches }: Props) {
             <Popup>
 
               🐟 {item.fishName}
-              <br />
-              ⚖️ Вес: {item.weight} кг
-              <br />
+              <br/>
+              ⚖️ {item.weight} кг
+              <br/>
               📍 {item.place}
-              <br />
-              📅 {item.date}
 
             </Popup>
 
+
           </Marker>
+
         )
 
       })}
 
+
     </MapContainer>
+
   )
 }
 
