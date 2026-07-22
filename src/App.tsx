@@ -12,6 +12,23 @@ type Catch = {
   location: string
 }
 
+const fishes = [
+  "Щука",
+  "Окунь",
+  "Судак",
+  "Карп",
+  "Карась",
+  "Лещ",
+  "Сом",
+  "Краснопёрка",
+  "Плотва",
+  "Линь",
+  "Жерех",
+  "Толстолобик",
+  "Белый амур",
+  "Форель",
+  "Голавль"
+]
 
 function App() {
 
@@ -198,131 +215,148 @@ function App() {
 
       <div className="card">
 
-        <h2>
-          ➕ Добавить улов
-        </h2>
+  <h2>
+    ➕ Добавить улов
+  </h2>
 
 
-        <input
-          placeholder="Какая рыба?"
-          value={fishName}
-          onChange={
-            e=>setFishName(e.target.value)
-          }
-        />
+  <select
+    value={fishName}
+    onChange={e => setFishName(e.target.value)}
+  >
 
+    <option value="">
+      Выберите рыбу
+    </option>
 
-        <input
-          placeholder="Вес (кг)"
-          value={weight}
-          onChange={
-            e=>setWeight(e.target.value)
-          }
-        />
+    {fishes.map((fish) => (
 
+      <option
+        key={fish}
+        value={fish}
+      >
+        🐟 {fish}
+      </option>
 
-        <input
-          placeholder="Место ловли"
-          value={place}
-          onChange={
-            e=>setPlace(e.target.value)
-          }
-        />
+    ))}
 
-
-        <input
-          type="date"
-          value={date}
-          onChange={
-            e=>setDate(e.target.value)
-          }
-        />
-
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={uploadPhoto}
-        />
-
-
-        <button onClick={addCatch}>
-          Сохранить улов 🐟
-        </button>
-
-
-      </div>
+  </select>
 
 
 
+  <input
+    placeholder="Вес (кг)"
+    value={weight}
+    onChange={
+      e => setWeight(e.target.value)
+    }
+  />
 
-      <h2>
-        🐟 Мои уловы
-      </h2>
 
+
+  <input
+    placeholder="Место ловли"
+    value={place}
+    onChange={
+      e => setPlace(e.target.value)
+    }
+  />
+
+
+
+  <input
+    type="date"
+    value={date}
+    onChange={
+      e => setDate(e.target.value)
+    }
+  />
+
+
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={uploadPhoto}
+  />
+
+
+
+  <button onClick={addCatch}>
+  Сохранить улов 🐟
+</button>
+
+</div>
+
+
+<h2>
+  🐟 Мои уловы
+</h2>
 
       <div className="catches">
 
+  {catches.map((item, index) => (
 
-        {catches.map((item,index)=>(
+    <div
+      className="catch-card"
+      key={index}
+    >
 
-          <div
-            className="catch-card"
-            key={index}
-          >
+      {item.photo && (
+        <img
+          className="catch-photo"
+          src={item.photo}
+          alt={item.fishName}
+        />
+      )}
 
-            {item.photo &&
-              <img
-                src={item.photo}
-                alt="fish"
-              />
-            }
+      <div className="catch-content">
 
+        <h2>🐟 {item.fishName}</h2>
 
-            <h3>
-              🐟 {item.fishName}
-            </h3>
+        <div className="catch-info">
 
+  <div>
+    <span>⚖️ Вес</span>
+    <b>{item.weight} кг</b>
+  </div>
 
-            <p>
-              ⚖️ Вес: {item.weight} кг
-            </p>
+  <div>
+    <span>📍 Место</span>
+    <b>{item.place}</b>
+  </div>
 
+  <div>
+    <span>📅 Дата</span>
+    <b>{item.date}</b>
+  </div>
 
-            <p>
-              📍 {item.place}
-            </p>
+</div>
 
+{item.location && (
+  <div className="coordinates">
+    🗺️ {item.location}
+  </div>
+)}
 
-            <p>
-              📅 {item.date}
-            </p>
-
-
-            <p>
-              🗺️ {item.location}
-            </p>
-
-
-            <button
-              onClick={() => deleteCatch(index)}
-            >
-              🗑️ Удалить
-            </button>
-
-
-          </div>
-
-        ))}
-
+<button
+  className="delete-btn"
+  onClick={() => deleteCatch(index)}
+>
+  🗑️ Удалить улов
+</button>
 
       </div>
 
+    </div>
+
+  ))}
+
+</div>
 
     </div>
 
   )
 }
-
 
 export default App
