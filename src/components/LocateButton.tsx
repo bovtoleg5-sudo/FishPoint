@@ -23,7 +23,10 @@ export default function LocateButton({
 
         setPosition([lat, lng]);
 
-        map.setView([lat, lng], 15);
+        map.flyTo([lat, lng], 16, {
+  animate: true,
+  duration: 1.5,
+});
 
         setLocation(`${lat}, ${lng}`);
 
