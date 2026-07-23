@@ -1,272 +1,126 @@
-import { 
-  MapContainer, 
-  TileLayer, 
-  Marker, 
-  Popup, 
-  useMapEvents,
-  useMap
-} from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import { useState } from 'react'
-import L from 'leaflet'
+import {
+  MapContainer,
+  TileLayer
+} from "react-leaflet";
 
-import markerIcon from 'leaflet/dist/images/marker-icon.png'
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import "leaflet/dist/leaflet.css";
+import { useState } from "react";
+import L from "leaflet";
 
+import LocationMarker from "./components/LocationMarker";
+import CatchMarkers from "./components/CatchMarkers";
+
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 const DefaultIcon = L.icon({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
-})
+});
 
-L.Marker.prototype.options.icon = DefaultIcon
-
-
+L.Marker.prototype.options.icon = DefaultIcon;
 
 type Catch = {
-  fishName: string
-  weight: string
-  place: string
-  date: string
-  photo: string
-  location: string
-}
-
+  fishName: string;
+  weight: string;
+  place: string;
+  date: string;
+  photo: string;
+  location: string;
+};
 
 type Props = {
-  catches: Catch[]
-  setLocation: (location: string) => void
-  setPlace: (place: string) => void
-}
+  catches: Catch[];
+  setLocation: (location: string) => void;
+  setPlace: (place: string) => void;
+};
 
-
-
-function LocationMarker({
-  setLocation,
-  setPlace
-}: {
-  setLocation: (location: string) => void
-  setPlace: (place: string) => void
-}) {
-
-
-  const [position, setPosition] =
-    useState<[number, number] | null>(null)
-
-
-
-  useMapEvents({
-
-    click(e) {
-
-      const coords: [number, number] = [
-        e.latlng.lat,
-        e.latlng.lng
-      ]
-
-
-      setPosition(coords)
-
-
-      const gps =
-        `${coords[0]}, ${coords[1]}`
-
-
-      setLocation(gps)
-
-
-      setPlace(
-        `Точка на карте ${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`
-      )
-
-    }
-
-  })
-
-
-
-  return position ? (
-
-    <Marker position={position}>
-
-      <Popup>
-        🎣 Место улова выбрано
-      </Popup>
-
-    </Marker>
-
-  ) : null
-
-}
-
-function LocateButton({
-  setLocation,
-  setPlace
-}: {
-  setLocation: (location:string)=>void
-  setPlace: (place:string)=>void
-}) {
-
-  const map = useMap()
-
-
-  async function getLocation() {
-
-  navigator.geolocation.getCurrentPosition(
-
-    async (position) => {
-
-      const lat = position.coords.latitude
-      const lng = position.coords.longitude
-
-      map.setView([lat, lng], 15)
-
-      setLocation(`${lat}, ${lng}`)
-
-      try {
-
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
-        )
-
-        const data = await response.json()
-
-        setPlace(
-          data.display_name || `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
-        )
-
-      } catch {
-
-        setPlace(
-          `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
-        )
-
-      }
-
-    },
-
-    () => {
-      alert("Разрешите доступ к GPS")
-    }
-
-  )
-
-}
-
-
-  return (
-
-    <button
-      style={{
-        position:'absolute',
-        zIndex:1000,
-        top:20,
-        right:20,
-        width:'auto',
-        padding:'10px 15px'
-      }}
-
-      onClick={getLocation}
-    >
-
-      📍 Моё место
-
-    </button>
-
-  )
-
-}
-
-
-
-function Map({
+export default function Map({
   catches,
   setLocation,
-  setPlace
+  setPlace,
 }: Props) {
+  const [currentPosition, setCurrentPosition] =
+    useState<[number, number] | null>(null);
 
+    async function getMyLocation() {
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
 
-  return (
+      setCurrentPosition([lat, lng]);
 
-  <div style={{position:'relative'}}>
+      setLocation(`${lat}, ${lng}`);
 
-    <MapContainer
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        );
 
-      center={[49.9935, 36.2304]}
+        const data = await response.json();
 
-      zoom={12}
-
-      style={{
-        height:'400px',
-        width:'100%'
-      }}
-
-    >
-
-      <TileLayer
-
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-
-      />
-
-
-      <LocationMarker
-        setLocation={setLocation}
-        setPlace={setPlace}
-      />
-
-      <LocateButton
-        setLocation={setLocation}
-        setPlace={setPlace}
-      />
-
-
-      {catches.map((item,index)=>{
-
-        if(!item.location)
-          return null
-
-
-        const position =
-          item.location
-          .split(',')
-          .map(Number) as [number,number]
-
-
-        return (
-
-          <Marker
-            key={index}
-            position={position}
-          >
-
-            <Popup>
-
-              🐟 {item.fishName}
-
-              <br/>
-
-              ⚖️ {item.weight} кг
-
-              <br/>
-
-              📍 {item.place}
-
-            </Popup>
-
-          </Marker>
-
-        )
-
-      })}
-
-
-    </MapContainer>
-
-  </div>
-
-  )
-
+        setPlace(data.display_name);
+      } catch {
+        setPlace(`GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+      }
+    },
+    () => {
+      alert("Разрешите доступ к GPS");
+    }
+  );
 }
 
-export default Map
+  return (
+  <div style={{ position: "relative" }}>
+    <button
+      onClick={getMyLocation}
+      
+      style={{
+        position: "absolute",
+        top: "15px",
+        right: "15px",
+        zIndex: 1000,
+        background: "#ffffff",
+        border: "1px solid #ccc",
+        borderRadius: "10px",
+        padding: "10px 15px",
+        width: "auto",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        cursor: "pointer",
+        fontWeight: "bold",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+      }}
+    >
+ GPS
+</button>
+      <MapContainer
+  center={[49.9935, 36.2304]}
+  zoom={12}
+  style={{
+    height: "400px",
+    width: "100%",
+  }}
+>
+              <TileLayer
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {/* 
+<LocationMarker
+  position={currentPosition}
+  setPosition={setCurrentPosition}
+  setLocation={setLocation}
+  setPlace={setPlace}
+/>
+*/}
+
+        
+
+        <CatchMarkers catches={catches} />
+      </MapContainer>
+    </div>
+  );
+}
