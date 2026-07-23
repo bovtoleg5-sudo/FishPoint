@@ -1,4 +1,11 @@
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet'
+import { 
+  MapContainer, 
+  TileLayer, 
+  Marker, 
+  Popup, 
+  useMapEvents,
+  useMap
+} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useState } from 'react'
 import L from 'leaflet'
@@ -92,7 +99,83 @@ function LocationMarker({
 
 }
 
+function LocateButton({
+  setLocation,
+  setPlace
+}: {
+  setLocation: (location:string)=>void
+  setPlace: (place:string)=>void
+}) {
 
+  const map = useMap()
+
+
+  async function getLocation() {
+
+  navigator.geolocation.getCurrentPosition(
+
+    async (position) => {
+
+      const lat = position.coords.latitude
+      const lng = position.coords.longitude
+
+      map.setView([lat, lng], 15)
+
+      setLocation(`${lat}, ${lng}`)
+
+      try {
+
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        )
+
+        const data = await response.json()
+
+        setPlace(
+          data.display_name || `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
+        )
+
+      } catch {
+
+        setPlace(
+          `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
+        )
+
+      }
+
+    },
+
+    () => {
+      alert("Разрешите доступ к GPS")
+    }
+
+  )
+
+}
+
+
+  return (
+
+    <button
+      style={{
+        position:'absolute',
+        zIndex:1000,
+        top:20,
+        right:20,
+        width:'auto',
+        padding:'10px 15px'
+      }}
+
+      onClick={getLocation}
+    >
+
+      📍 Моё место
+
+    </button>
+
+  )
+
+}
 
 
 
@@ -104,6 +187,8 @@ function Map({
 
 
   return (
+
+  <div style={{position:'relative'}}>
 
     <MapContainer
 
@@ -118,7 +203,6 @@ function Map({
 
     >
 
-
       <TileLayer
 
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -126,23 +210,21 @@ function Map({
       />
 
 
-
       <LocationMarker
-
         setLocation={setLocation}
-
         setPlace={setPlace}
-
       />
 
+      <LocateButton
+        setLocation={setLocation}
+        setPlace={setPlace}
+      />
 
 
       {catches.map((item,index)=>{
 
-
         if(!item.location)
           return null
-
 
 
         const position =
@@ -151,17 +233,12 @@ function Map({
           .map(Number) as [number,number]
 
 
-
         return (
 
           <Marker
-
             key={index}
-
             position={position}
-
           >
-
 
             <Popup>
 
@@ -175,25 +252,21 @@ function Map({
 
               📍 {item.place}
 
-
             </Popup>
-
 
           </Marker>
 
-
         )
-
 
       })}
 
 
-
     </MapContainer>
+
+  </div>
 
   )
 
 }
-
 
 export default Map
