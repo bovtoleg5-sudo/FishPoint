@@ -38,12 +38,43 @@ export default function CatchMarkers({ catches }: Props) {
   }}
 >
             <Popup>
-              🐟 {item.fishName}
-              <br />
-              ⚖️ {item.weight} кг
-              <br />
-              📍 {item.place}
-            </Popup>
+  <div style={{ textAlign: "center" }}>
+    <div>
+      Фото: {item.photo ? "есть" : "нет"}
+    </div>
+
+    {item.photo && (
+      <img
+        src={item.photo}
+        alt={item.fishName}
+        style={{
+          width: "180px",
+          height: "120px",
+          objectFit: "cover",
+          borderRadius: "10px",
+          marginBottom: "8px",
+        }}
+      />
+    )}
+
+    <div>
+      🐟 <b>{item.fishName}</b>
+    </div>
+
+    <div>
+      ⚖️ {item.weight} кг
+    </div>
+
+    <div>
+      📅 {item.date}
+    </div>
+
+    <div>
+      📍 {item.place}
+    </div>
+
+  </div>
+</Popup>
           </Marker>
         );
       })}
