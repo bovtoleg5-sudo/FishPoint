@@ -94,7 +94,7 @@ export default function Map({
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }}
     >
- GPS
+ 📍 Моё место
 </button>
       <MapContainer
   center={[49.9935, 36.2304]}
