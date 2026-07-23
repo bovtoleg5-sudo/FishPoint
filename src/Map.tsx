@@ -9,6 +9,7 @@ import L from "leaflet";
 
 import LocationMarker from "./components/LocationMarker";
 import CatchMarkers from "./components/CatchMarkers";
+import RecenterMap from "./components/RecenterMap";
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -51,6 +52,8 @@ export default function Map({
 
       setCurrentPosition([lat, lng]);
 
+      console.log("Моя точка:", lat, lng);
+
       setLocation(`${lat}, ${lng}`);
 
       try {
@@ -60,13 +63,21 @@ export default function Map({
 
         const data = await response.json();
 
-        setPlace(data.display_name);
+        setPlace(
+          data.display_name || `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
+        );
+
       } catch {
         setPlace(`GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
       }
     },
     () => {
       alert("Разрешите доступ к GPS");
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
     }
   );
 }
@@ -109,6 +120,8 @@ export default function Map({
               <TileLayer
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        <RecenterMap position={currentPosition} />
 
          
 <LocationMarker
