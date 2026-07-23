@@ -39,9 +39,6 @@ export default function CatchMarkers({ catches }: Props) {
 >
             <Popup>
   <div style={{ textAlign: "center" }}>
-    <div>
-      Фото: {item.photo ? "есть" : "нет"}
-    </div>
 
     {item.photo && (
       <img
