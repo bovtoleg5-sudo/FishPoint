@@ -75,7 +75,7 @@ export default function Map({
   <div style={{ position: "relative" }}>
     <button
       onClick={getMyLocation}
-      
+
       style={{
         position: "absolute",
         top: "15px",
@@ -108,14 +108,13 @@ export default function Map({
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* 
+         
 <LocationMarker
   position={currentPosition}
   setPosition={setCurrentPosition}
   setLocation={setLocation}
   setPlace={setPlace}
 />
-*/}
 
         
 
