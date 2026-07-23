@@ -1,4 +1,4 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, useMap } from "react-leaflet";
 
 type Catch = {
   fishName: string;
@@ -14,6 +14,9 @@ type Props = {
 };
 
 export default function CatchMarkers({ catches }: Props) {
+
+  const map = useMap();
+
   return (
     <>
       {catches.map((item, index) => {
@@ -23,7 +26,17 @@ export default function CatchMarkers({ catches }: Props) {
           item.location.split(",").map(Number) as [number, number];
 
         return (
-          <Marker key={index} position={position}>
+          <Marker
+  key={index}
+  position={position}
+  eventHandlers={{
+    click: () => {
+      map.flyTo(position, 16, {
+        animate: true,
+      });
+    },
+  }}
+>
             <Popup>
               🐟 {item.fishName}
               <br />
