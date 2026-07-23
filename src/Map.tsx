@@ -73,15 +73,16 @@ export default function Map({
 
   return (
   <div style={{ position: "relative" }}>
-    <button
+  <button
       onClick={getMyLocation}
 
       style={{
         position: "absolute",
         top: "15px",
         right: "15px",
-        zIndex: 1000,
+        zIndex: 2000,
         background: "#ffffff",
+        color: "#000000",
         border: "1px solid #ccc",
         borderRadius: "10px",
         padding: "10px 15px",
@@ -90,11 +91,12 @@ export default function Map({
         alignItems: "center",
         gap: "6px",
         cursor: "pointer",
+        fontSize: "16px",
         fontWeight: "bold",
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }}
     >
- 📍 Моё место
+  📍 Моё место
 </button>
       <MapContainer
   center={[49.9935, 36.2304]}
