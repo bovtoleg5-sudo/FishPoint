@@ -9,6 +9,7 @@ type Catch = {
   location: string;
 };
 
+
 type Props = {
   catches: Catch[];
 };
@@ -42,136 +43,99 @@ export default function ProfilePage({ catches }: Props) {
 
   function uploadAvatar(e: any) {
 
-    const file = e.target.files[0];
+  const file = e.target.files[0];
 
-    if (file) {
+  if (!file) return;
 
-      const reader = new FileReader();
+  const reader = new FileReader();
 
-      reader.onload = () => {
+  reader.onload = () => {
 
-        setAvatar(
-          reader.result as string
-        );
+    setAvatar(
+      reader.result as string
+    );
 
-      };
+  };
 
-      reader.readAsDataURL(file);
-    }
-  }
+  reader.readAsDataURL(file);
 
+}
 
-  const totalWeight = catches.reduce(
-    (sum, item) => sum + Number(item.weight),
-    0
-  );
-
-
-  const bestCatch = catches.length > 0
-    ? Math.max(
-        ...catches.map(
-          item => Number(item.weight)
-        )
-      )
-    : 0;
-
-
-  const places = new Set(
-    catches.map(
-      item => item.place
-    )
-  ).size;
+  
 
 
   return (
+    <div className="card">
 
-    <div className="app">
-
-      <div className="card">
-
-        <h1>
-          👤 Профиль рыбака
-        </h1>
+      <h1>
+        👤 Профиль рыбака
+      </h1>
 
 
-        {avatar && (
-          <img
-            src={avatar}
-            alt="avatar"
-            style={{
-              width:100,
-              height:100,
-              borderRadius:"50%",
-              objectFit:"cover"
-            }}
-          />
-        )}
-
-
-        <h2>
-          {name}
-        </h2>
-
-
-        <input
-          placeholder="Введите имя"
-          value={name}
-          onChange={
-            e => setName(e.target.value)
-          }
+      {avatar && (
+        <img
+          src={avatar}
+          alt="avatar"
+          style={{
+            width:100,
+            height:100,
+            borderRadius:"50%",
+            objectFit:"cover"
+          }}
         />
+      )}
 
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={uploadAvatar}
-        />
+      <h2>
+        {name}
+      </h2>
 
 
-        <button
-          onClick={saveProfile}
-        >
-          💾 Сохранить профиль
-        </button>
+      <input
+        placeholder="Введите имя"
+        value={name}
+        onChange={
+          e => setName(e.target.value)
+        }
+      />
 
 
-        <hr />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={uploadAvatar}
+      />
 
 
-        <h2>
-          📊 Статистика
-        </h2>
+      <button
+        type="button"
+        onClick={saveProfile}
+       >
+      💾 Сохранить профиль
+       </button>
 
 
-        <p>
-          🎣 Уровень: Новичок
-        </p>
+      <hr />
 
 
-        <p>
-          🐟 Уловов: {catches.length}
-        </p>
+      <h2>
+        📊 Статистика
+      </h2>
 
 
-        <p>
-          ⚖️ Общий вес: {totalWeight} кг
-        </p>
+      <p>
+        🎣 Уровень: Новичок
+      </p>
 
+      <p>
+  🐟 Уловов: {catches.length}
+      </p>
 
-        <p>
-          🏆 Лучший улов: {bestCatch} кг
-        </p>
+      <p>
+        🏆 Рекорд: пока нет
+      </p>
 
-
-        <p>
-          📍 Мест посещено: {places}
-        </p>
-
-
-      </div>
 
     </div>
-
   );
 }
