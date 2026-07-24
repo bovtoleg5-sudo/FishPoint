@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import Map from './Map'
-
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import ProfilePage from "./pages/ProfilePage";
 
 type Catch = {
   fishName: string
@@ -136,7 +137,20 @@ function App() {
 
   return (
 
-    <div className="app">
+    <BrowserRouter>
+
+      <Routes>
+
+        <Route
+          path="/profile"
+          element={<ProfilePage />}
+        />
+
+        <Route
+          path="/"
+          element={
+
+            <div className="app">
 
       <h1>🎣 Fishpoint</h1>
 
@@ -151,7 +165,25 @@ function App() {
   setPlace={setPlace}
 />
 
+<div className="card profile-card">
 
+  <h2>👤 Профиль рыбака</h2>
+
+  <p>
+    🎣 Рыбак
+  </p>
+
+  <p>
+    🐟 Уловов: {catches.length}
+  </p>
+
+  <Link to="/profile">
+    <button>
+      Открыть профиль →
+    </button>
+  </Link>
+
+</div>
 
       <div className="stats">
 
@@ -355,6 +387,13 @@ function App() {
 </div>
 
     </div>
+
+          }
+        />
+
+      </Routes>
+
+    </BrowserRouter>
 
   )
 }
