@@ -1,4 +1,5 @@
 import { Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
 
 type Catch = {
   fishName: string;
@@ -13,6 +14,13 @@ type Props = {
   catches: Catch[];
 };
 
+const fishIcon = L.icon({
+  iconUrl: "/icons/fish-marker.png",
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -35],
+});
+
 export default function CatchMarkers({ catches }: Props) {
 
   const map = useMap();
@@ -26,9 +34,10 @@ export default function CatchMarkers({ catches }: Props) {
           item.location.split(",").map(Number) as [number, number];
 
         return (
-          <Marker
+  <Marker
   key={index}
   position={position}
+  icon={fishIcon}
   eventHandlers={{
     click: () => {
       map.flyTo(position, 16, {

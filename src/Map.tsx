@@ -44,6 +44,10 @@ export default function Map({
   const [currentPosition, setCurrentPosition] =
     useState<[number, number] | null>(null);
 
+    const [satellite, setSatellite] = useState(false);
+
+    const [search, setSearch] = useState("");
+
     async function getMyLocation() {
   navigator.geolocation.getCurrentPosition(
     async (position) => {
@@ -82,15 +86,68 @@ export default function Map({
   );
 }
 
+async function searchPlace() {
+    if (!search.trim()) return;
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}`
+      );
+
+      const data = await response.json();
+
+      if (data.length === 0) {
+        alert("Место не найдено");
+        return;
+      }
+
+      const lat = Number(data[0].lat);
+      const lng = Number(data[0].lon);
+
+      setCurrentPosition([lat, lng]);
+
+      setLocation(`${lat}, ${lng}`);
+      setPlace(data[0].display_name);
+
+    } catch {
+      alert("Ошибка поиска");
+    }
+  }
+
+
   return (
   <div style={{ position: "relative" }}>
-  <button
-      onClick={getMyLocation}
+    <input
+  type="text"
+  placeholder="🔍 Найти озеро, реку или город..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  onKeyDown={(e) => {
+  if (e.key === "Enter") {
+    searchPlace();
+  }
+}}
 
+  style={{
+    position: "absolute",
+    top: "10px",
+    left: "10px",
+    zIndex: 2000,
+    width: "calc(100% - 120px)",
+    padding: "10px 15px",
+    maxWidth: "300px",
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    fontSize: "15px",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+  }}
+/>
+    <button
+      onClick={getMyLocation}
       style={{
         position: "absolute",
-        top: "15px",
-        right: "15px",
+        top: "60px",
+        right: "10px",
         zIndex: 2000,
         background: "#ffffff",
         color: "#000000",
@@ -107,9 +164,31 @@ export default function Map({
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }}
     >
-  📍 Моё место
-</button>
-      <MapContainer
+      📍 Моё место
+    </button>
+
+    <button
+      onClick={() => setSatellite(!satellite)}
+      style={{
+        position: "absolute",
+        top: "110px",
+        right: "10px",
+        zIndex: 2000,
+        background: "#ffffff",
+        color: "#000000",
+        border: "1px solid #ccc",
+        borderRadius: "10px",
+        padding: "10px 15px",
+        cursor: "pointer",
+        fontSize: "16px",
+        fontWeight: "bold",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+      }}
+    >
+      {satellite ? "🗺️ Карта" : "🛰️ Спутник"}
+    </button>
+
+     <MapContainer
   center={[49.9935, 36.2304]}
   zoom={12}
   style={{
@@ -117,24 +196,34 @@ export default function Map({
     width: "100%",
   }}
 >
-              <TileLayer
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
 
-        <RecenterMap position={currentPosition} />
+  {currentPosition && (
+    <RecenterMap position={currentPosition} />
+  )}
 
-         
-<LocationMarker
-  position={currentPosition}
-  setPosition={setCurrentPosition}
-  setLocation={setLocation}
-  setPlace={setPlace}
-/>
+  <LocationMarker
+    position={currentPosition}
+    setPosition={setCurrentPosition}
+    setLocation={setLocation}
+    setPlace={setPlace}
+  />
 
-        
+  <CatchMarkers catches={catches} />
 
-        <CatchMarkers catches={catches} />
-      </MapContainer>
-    </div>
-  );
+  <TileLayer
+    attribution={
+      satellite
+        ? '&copy; Esri'
+        : '&copy; OpenStreetMap contributors'
+    }
+    url={
+      satellite
+        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        : "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    }
+  />
+
+</MapContainer>
+</div>
+);
 }
