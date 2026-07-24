@@ -129,18 +129,18 @@ async function searchPlace() {
 }}
 
   style={{
-    position: "absolute",
-    top: "10px",
-    left: "10px",
-    zIndex: 2000,
-    width: "calc(100% - 120px)",
-    padding: "10px 15px",
-    maxWidth: "300px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "15px",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-  }}
+  position: "absolute",
+  top: "10px",
+  left: "50px",
+  zIndex: 2000,
+  width: "calc(100% - 130px)",
+  maxWidth: "280px",
+  padding: "10px",
+  borderRadius: "10px",
+  border: "1px solid #ccc",
+  fontSize: "15px",
+  boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+}}
 />
     <button
       onClick={getMyLocation}
@@ -153,13 +153,15 @@ async function searchPlace() {
         color: "#000000",
         border: "1px solid #ccc",
         borderRadius: "10px",
-        padding: "10px 15px",
-        width: "auto",
+        padding: "6px",
+        width: "42px",
+        height: "42px",
+        justifyContent: "center",
         display: "inline-flex",
         alignItems: "center",
         gap: "6px",
         cursor: "pointer",
-        fontSize: "16px",
+        fontSize: "9px",
         fontWeight: "bold",
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }}
@@ -178,14 +180,19 @@ async function searchPlace() {
         color: "#000000",
         border: "1px solid #ccc",
         borderRadius: "10px",
-        padding: "10px 15px",
+        padding: "6px",
+        width: "42px",
+        height: "42px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         cursor: "pointer",
-        fontSize: "16px",
+        fontSize: "20px",
         fontWeight: "bold",
         boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }}
     >
-      {satellite ? "🗺️ Карта" : "🛰️ Спутник"}
+      {satellite ? "🗺️" : "🛰️"}
     </button>
 
      <MapContainer
