@@ -142,9 +142,10 @@ function App() {
       <Routes>
 
         <Route
-          path="/profile"
-          element={<ProfilePage />}
-        />
+  path="/profile"
+  element={<ProfilePage catches={catches} />
+  }
+/>
 
         <Route
           path="/"
