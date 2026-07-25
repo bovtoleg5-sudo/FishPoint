@@ -92,7 +92,29 @@ export default function ProfilePage({ catches }: Props) {
   reader.readAsDataURL(file);
 }
 
-  
+  const xp = catches.length * 100;
+
+let level = "Новичок";
+
+if (xp >= 500) level = "Любитель";
+if (xp >= 1000) level = "Опытный";
+if (xp >= 2500) level = "Эксперт";
+if (xp >= 5000) level = "Мастер";
+
+
+const totalWeight = catches.reduce((sum, catchItem) => {
+  return sum + (parseFloat(catchItem.weight) || 0);
+}, 0);
+
+
+const biggestCatch =
+  catches.length > 0
+    ? catches.reduce((max, current) =>
+        parseFloat(current.weight) > parseFloat(max.weight)
+          ? current
+          : max
+      )
+    : null;
 
 
   return (
@@ -156,16 +178,27 @@ export default function ProfilePage({ catches }: Props) {
 
 
       <p>
-        🎣 Уровень: Новичок
-      </p>
+🎣 Уровень: <b>{level}</b>
+</p>
 
-      <p>
-  🐟 Уловов: {catches.length}
-      </p>
+<p>
+⭐ Опыт: {xp} XP
+</p>
 
-      <p>
-        🏆 Рекорд: пока нет
-      </p>
+<p>
+🐟 Уловов: {catches.length}
+</p>
+
+<p>
+⚖️ Общий вес: {totalWeight.toFixed(1)} кг
+</p>
+
+<p>
+🏆 Рекорд:{" "}
+{biggestCatch
+  ? `${biggestCatch.fishName} (${biggestCatch.weight} кг)`
+  : "пока нет"}
+</p>
 
 
     </div>

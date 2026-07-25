@@ -1,39 +1,30 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #e8f5ff;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#edf7ff;
+  --primary:#0F4C81;
+  --secondary:#1E88E5;
+  --accent:#00ACC1;
+  --card:rgba(255,255,255,.72);
+  --text:#16324F;
+  --shadow:0 12px 35px rgba(0,0,0,.12);
 }
 
-.app {
-  min-height: 100vh;
-  padding: 30px;
-  text-align: center;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-h1 {
-  color: #0066cc;
-  font-size: 40px;
+html,
+body,
+#root{
+  min-height:100%;
 }
 
-.card {
-  background: white;
-  max-width: 400px;
-  margin: 30px auto;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
-
-button {
-  background: #0077cc;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 10px;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #005fa3;
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
 }
