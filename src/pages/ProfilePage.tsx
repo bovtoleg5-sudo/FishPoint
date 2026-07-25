@@ -50,6 +50,8 @@ export default function ProfilePage({ catches }: Props) {
   reader.onload = () => {
     const image = reader.result as string;
 
+    alert(image.length);
+
     // Показываем аватар
     setAvatar(image);
 
