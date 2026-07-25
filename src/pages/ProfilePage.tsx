@@ -101,10 +101,13 @@ export default function ProfilePage({ catches }: Props) {
 
 
       <input
-        type="file"
-        accept="image/*"
-        onChange={uploadAvatar}
-      />
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    alert("onChange");
+    uploadAvatar(e);
+  }}
+/>
 
 
       <button
