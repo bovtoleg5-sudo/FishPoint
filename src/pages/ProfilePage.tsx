@@ -41,24 +41,33 @@ export default function ProfilePage({ catches }: Props) {
   }
 
 
-  function uploadAvatar(e: any) {
+  function uploadAvatar(e: React.ChangeEvent<HTMLInputElement>) {
 
-  const file = e.target.files[0];
+  alert("uploadAvatar вызвана");
 
-  if (!file) return;
+  const files = e.target.files;
+
+  if (!files || files.length === 0) {
+    alert("Файл не выбран");
+    return;
+  }
+
+  const file = files[0];
+
+  alert(file.name);
 
   const reader = new FileReader();
 
   reader.onload = () => {
+    alert("Фото прочитано");
+    setAvatar(reader.result as string);
+  };
 
-    setAvatar(
-      reader.result as string
-    );
-
+  reader.onerror = () => {
+    alert("Ошибка чтения");
   };
 
   reader.readAsDataURL(file);
-
 }
 
   
