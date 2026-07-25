@@ -9,7 +9,7 @@
   width:min(95%,1200px);
   margin:auto;
   padding:30px;
-  padding-bottom:90px;
+  padding-bottom:120px;
 }
 
 h1{
@@ -625,36 +625,61 @@ body::after {
 /* Нижнее меню телефона */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
 
-  height: 70px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
 
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  height: 72px;
+
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(15px);
 
   display: flex;
   justify-content: space-around;
   align-items: center;
 
-  border-top: 1px solid #ddd;
+  border-radius: 22px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.15);
 
   z-index: 1000;
+
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 /* Элемент меню */
 .bottom-item {
+
   flex: 1;
 
   text-align: center;
+
   text-decoration: none;
 
   color: #777;
 
   font-size: 12px;
 
-  padding-top: 8px;
+  padding: 8px 0;
+
+  transition: .2s;
+
+}
+
+.bottom-item:active {
+  transform: scale(.9);
+}
+
+
+.bottom-item.active div {
+  transform: translateY(-4px);
+}
+
+
+.bottom-item.active {
+  color: #0077ff;
 }
 
 /* Иконка */
@@ -667,4 +692,113 @@ body::after {
 .bottom-item.active {
   color: #0077ff;
   font-weight: 600;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #1565c0,
+    #0288d1,
+    #26c6da
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+
+.splash-content {
+  text-align: center;
+  color: white;
+  animation: splashIn 1s ease;
+}
+
+
+.fish-logo {
+  font-size: 80px;
+  animation: floatFish 2s infinite ease-in-out;
+}
+
+
+.splash h1 {
+  color: white;
+  font-size: 48px;
+  margin: 10px 0;
+}
+
+
+.splash p {
+  font-size: 18px;
+}
+
+
+.loading {
+  margin-top: 25px;
+  opacity: .8;
+}
+
+
+.water {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  bottom: -150%;
+  left: -50%;
+  background: rgba(255,255,255,.15);
+  border-radius: 45%;
+  animation: wave 5s infinite linear;
+}
+
+
+@keyframes wave {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+@keyframes floatFish {
+
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+}
+
+
+@keyframes splashIn {
+
+  from {
+    opacity:0;
+    transform: scale(.8);
+  }
+
+  to {
+    opacity:1;
+    transform: scale(1);
+  }
+
+}
+
+.splash {
+  transition: opacity .7s ease;
+}
+
+
+.splash.hide {
+  opacity: 0;
 }

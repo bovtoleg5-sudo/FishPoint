@@ -7,6 +7,7 @@ import ProfilePage from "./pages/ProfilePage";
 import MapPage from "./pages/MapPage";
 import AddCatchPage from "./pages/AddCatchPage";
 import FeedPage from "./pages/FeedPage";
+import SplashScreen from "./components/SplashScreen";
 
 type Catch = {
   fishName: string
@@ -144,6 +145,8 @@ function App() {
   return (
 
   <BrowserRouter>
+
+  <SplashScreen />
 
     <div className="app-container">
 
