@@ -11,6 +11,7 @@ type Catch = {
   date: string
   photo: string
   location: string
+  isPublic: boolean
 }
 
 const fishes = [
@@ -39,6 +40,7 @@ function App() {
   const [date, setDate] = useState('')
   const [photo, setPhoto] = useState('')
   const [location, setLocation] = useState('')
+  const [isPublic, setIsPublic] = useState(false)
 
 
   const [catches, setCatches] = useState<Catch[]>(() => {
@@ -71,15 +73,14 @@ function App() {
 
 
     const newCatch: Catch = {
-
-      fishName,
-      weight,
-      place,
-      date,
-      photo,
-      location
-
-    }
+  fishName,
+  weight,
+  place,
+  date,
+  photo,
+  location,
+  isPublic
+}
 
 
     saveCatches([
@@ -94,6 +95,7 @@ function App() {
     setDate('')
     setPhoto('')
     setLocation('')
+    setIsPublic(false)
 
   }
 
@@ -153,11 +155,27 @@ function App() {
 
             <div className="app">
 
-      <h1>🎣 Fishpoint</h1>
+      <header className="hero">
+
+  <div className="hero-content">
+
+    <div className="hero-logo">
+      🎣
+    </div>
+
+    <div>
+
+      <h1>FishPoint</h1>
 
       <p>
-        Твоя карта рыбалок и уловов
+        Твой рыболовный дневник
       </p>
+
+    </div>
+
+  </div>
+
+</header>
 
 
       <Map
@@ -278,12 +296,13 @@ function App() {
 
 
   <input
-    placeholder="Вес (кг)"
-    value={weight}
-    onChange={
-      e => setWeight(e.target.value)
-    }
-  />
+  type="number"
+  step="0.1"
+  min="0"
+  placeholder="Вес (кг)"
+  value={weight}
+  onChange={(e) => setWeight(e.target.value)}
+/>
 
 
 
@@ -312,6 +331,39 @@ function App() {
     accept="image/*"
     onChange={uploadPhoto}
   />
+
+
+  <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    marginBottom: "18px",
+    marginTop: "10px",
+  }}
+>
+  <input
+    type="checkbox"
+    checked={isPublic}
+    onChange={(e) => setIsPublic(e.target.checked)}
+    style={{
+      width: "20px",
+      height: "20px",
+      cursor: "pointer",
+    }}
+  />
+
+  <span
+    style={{
+      fontSize: "16px",
+      fontWeight: 600,
+    }}
+  >
+    {isPublic
+      ? "🌍 Публичный улов"
+      : "🔒 Личный улов"}
+  </span>
+</div>
 
 
 
@@ -346,6 +398,25 @@ function App() {
       <div className="catch-content">
 
         <h2>🐟 {item.fishName}</h2>
+
+        <div
+  style={{
+    display: "inline-block",
+    marginBottom: "15px",
+    padding: "6px 12px",
+    borderRadius: "999px",
+    fontSize: "14px",
+    fontWeight: 600,
+    color: "white",
+    background: item.isPublic
+      ? "#2E7D32"
+      : "#546E7A",
+  }}
+>
+  {item.isPublic
+    ? "🌍 Публичный"
+    : "🔒 Личный"}
+</div>
 
         <div className="catch-info">
 
