@@ -29,7 +29,9 @@ export default function AddCatchPage({ addCatch }: Props) {
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
   const [photo, setPhoto] = useState("");
+  const [location, setLocation] = useState("");
   const [isPublic, setIsPublic] = useState(false);
+
 
   function save() {
 
@@ -39,36 +41,90 @@ export default function AddCatchPage({ addCatch }: Props) {
       place,
       date,
       photo,
-      location: "",
+      location,
       isPublic,
     });
+
 
     setFishName("");
     setWeight("");
     setPlace("");
     setDate("");
+    setPhoto("");
+    setLocation("");
+    setIsPublic(false);
+
 
     alert("🐟 Улов сохранён!");
   }
+
+
+
+  function getMyLocation() {
+
+    if (!navigator.geolocation) {
+
+      alert("GPS не поддерживается");
+      return;
+
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+      (position) => {
+
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+
+        setLocation(
+          `${lat}, ${lng}`
+        );
+
+
+        alert("📍 Место получено");
+
+      },
+
+
+      () => {
+
+        alert("Не удалось получить геолокацию");
+
+      }
+
+    );
+
+  }
+
 
 
   function uploadPhoto(e: any) {
 
     const file = e.target.files[0];
 
+
     if (file) {
 
       const reader = new FileReader();
 
+
       reader.onload = () => {
 
-        setPhoto(reader.result as string);
+        setPhoto(
+          reader.result as string
+        );
+
       };
 
+
       reader.readAsDataURL(file);
+
     }
 
   }
+
 
 
   return (
@@ -106,10 +162,25 @@ export default function AddCatchPage({ addCatch }: Props) {
         />
 
         <input
-          placeholder="Место ловли"
-          value={place}
-          onChange={(e) => setPlace(e.target.value)}
-        />
+  placeholder="Место ловли"
+  value={place}
+  onChange={(e) => setPlace(e.target.value)}
+/>
+
+
+<button
+  type="button"
+  onClick={getMyLocation}
+>
+  📍 Моё место
+</button>
+
+
+{location && (
+  <p>
+    🗺️ Координаты: {location}
+  </p>
+)}
 
         <input
           type="date"
