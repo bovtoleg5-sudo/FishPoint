@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import './App.css'
 import Map from './Map'
+import BottomNavigation from "./components/BottomNavigation";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ProfilePage from "./pages/ProfilePage";
+import MapPage from "./pages/MapPage";
+import AddCatchPage from "./pages/AddCatchPage";
+import FeedPage from "./pages/FeedPage";
 
 type Catch = {
   fishName: string
@@ -139,21 +143,57 @@ function App() {
 
   return (
 
-    <BrowserRouter>
+  <BrowserRouter>
+
+    <div className="app-container">
 
       <Routes>
 
-        <Route
-  path="/profile"
-  element={<ProfilePage catches={catches} />
+  <Route
+    path="/profile"
+    element={<ProfilePage catches={catches} />}
+  />
+
+  <Route
+  path="/add"
+  element={
+    <AddCatchPage
+      addCatch={(data) => {
+        saveCatches([
+          ...catches,
+          data
+        ]);
+      }}
+    />
   }
 />
 
-        <Route
-          path="/"
-          element={
 
-            <div className="app">
+  <Route
+  path="/map"
+  element={
+    <MapPage
+      catches={catches}
+      setLocation={setLocation}
+      setPlace={setPlace}
+    />
+  }
+/>
+
+<Route
+  path="/feed"
+  element={
+    <FeedPage
+      catches={catches}
+    />
+  }
+/>
+
+<Route
+  path="/"
+  element={
+
+    <div className="app">
 
       <header className="hero">
 
@@ -458,6 +498,8 @@ function App() {
 
 </div>
 
+
+
     </div>
 
           }
@@ -465,7 +507,11 @@ function App() {
 
       </Routes>
 
-    </BrowserRouter>
+      <BottomNavigation />
+
+    </div>
+
+  </BrowserRouter>
 
   )
 }

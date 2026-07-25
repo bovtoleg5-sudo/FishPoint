@@ -9,6 +9,7 @@
   width:min(95%,1200px);
   margin:auto;
   padding:30px;
+  padding-bottom:90px;
 }
 
 h1{
@@ -273,11 +274,18 @@ button:active{
 
 
 .catch-photo{
-
   width:100%;
   height:250px;
   object-fit:cover;
 
+  transition:
+      transform .45s ease,
+      filter .45s ease;
+}
+
+.catch-card:hover .catch-photo{
+  transform:scale(1.08);
+  filter:saturate(1.08) contrast(1.05);
 }
 
 
@@ -612,4 +620,51 @@ body::after {
 .stat-card,
 .hero-content{
   animation:fadeUp .5s ease;
+}
+
+/* Нижнее меню телефона */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 70px;
+
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  border-top: 1px solid #ddd;
+
+  z-index: 1000;
+}
+
+/* Элемент меню */
+.bottom-item {
+  flex: 1;
+
+  text-align: center;
+  text-decoration: none;
+
+  color: #777;
+
+  font-size: 12px;
+
+  padding-top: 8px;
+}
+
+/* Иконка */
+.bottom-item div {
+  font-size: 24px;
+  line-height: 25px;
+}
+
+/* Активная кнопка */
+.bottom-item.active {
+  color: #0077ff;
+  font-weight: 600;
 }
