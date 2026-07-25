@@ -45,22 +45,50 @@ export default function ProfilePage({ catches }: Props) {
   }
 
   const file = files[0];
+
   const reader = new FileReader();
 
   reader.onload = () => {
-    const image = reader.result as string;
+    const img = new Image();
 
-    alert(image.length);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
 
-    // Показываем аватар
-    setAvatar(image);
+      const size = 300;
 
-    // Сразу сохраняем в localStorage
-    localStorage.setItem("fishpoint-avatar", image);
-  };
+      canvas.width = size;
+      canvas.height = size;
 
-  reader.onerror = () => {
-    alert("Ошибка чтения файла");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) return;
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        size,
+        size
+      );
+
+      const compressedImage = canvas.toDataURL(
+        "image/jpeg",
+        0.7
+      );
+
+      setAvatar(compressedImage);
+
+      localStorage.setItem(
+        "fishpoint-avatar",
+        compressedImage
+      );
+
+      alert(
+        "Фото сохранено: " + compressedImage.length
+      );
+    };
+
+    img.src = reader.result as string;
   };
 
   reader.readAsDataURL(file);
