@@ -32,39 +32,33 @@ export default function ProfilePage({ catches }: Props) {
       name
     );
 
-    localStorage.setItem(
-      "fishpoint-avatar",
-      avatar
-    );
 
     alert("Профиль сохранён ✅");
   }
 
 
   function uploadAvatar(e: React.ChangeEvent<HTMLInputElement>) {
-
-  alert("uploadAvatar вызвана");
-
   const files = e.target.files;
 
   if (!files || files.length === 0) {
-    alert("Файл не выбран");
     return;
   }
 
   const file = files[0];
-
-  alert(file.name);
-
   const reader = new FileReader();
 
   reader.onload = () => {
-    alert("Фото прочитано");
-    setAvatar(reader.result as string);
+    const image = reader.result as string;
+
+    // Показываем аватар
+    setAvatar(image);
+
+    // Сразу сохраняем в localStorage
+    localStorage.setItem("fishpoint-avatar", image);
   };
 
   reader.onerror = () => {
-    alert("Ошибка чтения");
+    alert("Ошибка чтения файла");
   };
 
   reader.readAsDataURL(file);
@@ -109,22 +103,20 @@ export default function ProfilePage({ catches }: Props) {
       />
 
 
-      <input
+  <input
   type="file"
   accept="image/*"
-  onChange={(e) => {
-    alert("onChange");
-    uploadAvatar(e);
-  }}
+  onChange={uploadAvatar}
 />
 
 
+
       <button
-        type="button"
-        onClick={saveProfile}
-       >
-      💾 Сохранить профиль
-       </button>
+  type="button"
+  onClick={saveProfile}
+>
+  💾 Сохранить профиль
+</button>
 
 
       <hr />
