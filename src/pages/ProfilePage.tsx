@@ -83,9 +83,7 @@ export default function ProfilePage({ catches }: Props) {
         compressedImage
       );
 
-      alert(
-        "Фото сохранено: " + compressedImage.length
-      );
+    
     };
 
     img.src = reader.result as string;
