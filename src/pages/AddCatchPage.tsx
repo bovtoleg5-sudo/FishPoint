@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FishMap from "../components/FishMap";
 
 const fishes = [
   "Щука",
@@ -30,6 +31,7 @@ export default function AddCatchPage({ addCatch }: Props) {
   const [date, setDate] = useState("");
   const [photo, setPhoto] = useState("");
   const [location, setLocation] = useState("");
+  const [position, setPosition] = useState<[number, number] | null>(null);
   const [isPublic, setIsPublic] = useState(false);
 
 
@@ -52,6 +54,7 @@ export default function AddCatchPage({ addCatch }: Props) {
     setDate("");
     setPhoto("");
     setLocation("");
+    setPosition(null);
     setIsPublic(false);
 
 
@@ -78,12 +81,10 @@ export default function AddCatchPage({ addCatch }: Props) {
         const lng = position.coords.longitude;
 
 
-        setLocation(
-          `${lat}, ${lng}`
-        );
+        setLocation(`${lat}, ${lng}`);
+setPosition([lat, lng]);
 
-
-        alert("📍 Место получено");
+alert("📍 Место получено");
 
       },
 
@@ -182,6 +183,14 @@ export default function AddCatchPage({ addCatch }: Props) {
   </p>
 )}
 
+<FishMap
+  position={position}
+  setPosition={(coords) => {
+    setPosition(coords);
+    setLocation(`${coords[0]}, ${coords[1]}`);
+  }}
+/>
+
         <input
           type="date"
           value={date}
@@ -191,8 +200,48 @@ export default function AddCatchPage({ addCatch }: Props) {
         <input
   type="file"
   accept="image/*"
+  capture="environment"
   onChange={uploadPhoto}
 />
+
+{photo && (
+  <div
+    style={{
+      marginTop: "15px",
+      marginBottom: "15px",
+      textAlign: "center",
+    }}
+  >
+    <img
+      src={photo}
+      alt="Предпросмотр"
+      style={{
+        width: "100%",
+        maxHeight: "260px",
+        objectFit: "cover",
+        borderRadius: "16px",
+        boxShadow: "0 8px 20px rgba(0,0,0,.2)",
+      }}
+    />
+
+    <button
+      type="button"
+      onClick={() => setPhoto("")}
+      style={{
+        marginTop: "12px",
+        background: "#e53935",
+        color: "#fff",
+        border: "none",
+        borderRadius: "12px",
+        padding: "10px 18px",
+        cursor: "pointer",
+        fontWeight: 600,
+      }}
+    >
+      ❌ Удалить фото
+    </button>
+  </div>
+)}
 
 <div
   style={{
