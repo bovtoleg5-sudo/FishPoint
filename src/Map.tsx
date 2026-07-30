@@ -33,19 +33,18 @@ type Catch = {
 
 type Props = {
   catches: Catch[];
-  setLocation: (location: string) => void;
-  setPlace: (place: string) => void;
-
   showSearch: boolean;
   setShowSearch: (show: boolean) => void;
+  setLocation?: (location: string) => void;
+  setPlace?: (place: string) => void;
 };
 
 export default function Map({
   catches,
-  setLocation,
-  setPlace,
   showSearch,
   setShowSearch,
+  setLocation,
+  setPlace,
 }: Props) {
 
   const navigate = useNavigate();
@@ -72,7 +71,7 @@ export default function Map({
 
       console.log("Моя точка:", lat, lng);
 
-      setLocation(`${lat}, ${lng}`);
+      setLocation?.(`${lat}, ${lng}`);
 
       try {
         const response = await fetch(
@@ -81,12 +80,12 @@ export default function Map({
 
         const data = await response.json();
 
-        setPlace(
-          data.display_name || `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
-        );
+        setPlace?.(
+  data.display_name || `GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`
+);
 
       } catch {
-        setPlace(`GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+        setPlace?.(`GPS ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
       }
     },
     () => {
@@ -165,9 +164,9 @@ async function searchPlace() {
 
           setCurrentPosition([lat,lng]);
 
-          setLocation(`${lat}, ${lng}`);
+          setLocation?.(`${lat}, ${lng}`);
 
-          setPlace(item.display_name);
+          setPlace?.(item.display_name);
 
           setSearchResults([]);
 
