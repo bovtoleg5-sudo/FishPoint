@@ -14,12 +14,17 @@ type Props = {
   catches: Catch[];
   setLocation: (value: string) => void;
   setPlace: (value: string) => void;
+
+  showSearch: boolean;
+  setShowSearch: (show: boolean) => void;
 };
 
 export default function MapPage({
   catches,
   setLocation,
   setPlace,
+  showSearch,
+  setShowSearch,
 }: Props) {
   return (
     <div className="map-page">
@@ -27,10 +32,12 @@ export default function MapPage({
       <h1>🗺️ Карта рыбалок</h1>
 
       <Map
-        catches={catches}
-        setLocation={setLocation}
-        setPlace={setPlace}
-      />
+  catches={catches}
+  setLocation={setLocation}
+  setPlace={setPlace}
+  showSearch={showSearch}
+  setShowSearch={setShowSearch}
+/>
 
     </div>
   );

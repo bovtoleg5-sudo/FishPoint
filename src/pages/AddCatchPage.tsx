@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import FishMap from "../components/FishMap";
 
 const fishes = [
@@ -25,12 +26,20 @@ type Props = {
 
 export default function AddCatchPage({ addCatch }: Props) {
 
+const routerLocation = useLocation();
+
+console.log("Переданные данные:", routerLocation.state);
+
+const startLocation =
+  routerLocation.state?.location || "";
+
+
   const [fishName, setFishName] = useState("");
   const [weight, setWeight] = useState("");
   const [place, setPlace] = useState("");
   const [date, setDate] = useState("");
   const [photo, setPhoto] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(startLocation);
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [isPublic, setIsPublic] = useState(false);
 
@@ -246,25 +255,71 @@ alert("📍 Место получено");
 <div
   style={{
     display: "flex",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: "12px",
     marginTop: "15px",
     marginBottom: "15px",
+    width: "100%",
   }}
 >
-
-  <input
-    type="checkbox"
-    checked={isPublic}
-    onChange={(e) => setIsPublic(e.target.checked)}
-  />
-
-  <span>
+  <span
+    style={{
+      fontSize: "16px",
+      fontWeight: "600",
+    }}
+  >
     {isPublic
       ? "🌍 Публичный улов"
       : "🔒 Личный улов"}
   </span>
 
+  <label
+    style={{
+      position: "relative",
+      display: "inline-block",
+      width: "52px",
+      height: "28px",
+    }}
+  >
+    <input
+      type="checkbox"
+      checked={isPublic}
+      onChange={(e) => setIsPublic(e.target.checked)}
+      style={{
+        opacity: 0,
+        width: 0,
+        height: 0,
+      }}
+    />
+
+    <span
+      style={{
+        position: "absolute",
+        cursor: "pointer",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: isPublic ? "#4CAF50" : "#ccc",
+        transition: ".3s",
+        borderRadius: "30px",
+      }}
+    >
+      <span
+        style={{
+          position: "absolute",
+          content: '""',
+          height: "22px",
+          width: "22px",
+          left: isPublic ? "27px" : "3px",
+          top: "3px",
+          background: "#fff",
+          borderRadius: "50%",
+          transition: ".3s",
+        }}
+      />
+    </span>
+  </label>
 </div>
 
         <button onClick={save}>

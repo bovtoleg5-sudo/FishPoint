@@ -4,6 +4,14 @@
   box-sizing:border-box;
 }
 
+html,
+body,
+#root {
+  width:100%;
+  height:100%;
+  margin:0;
+}
+
 
 .app{
   width:min(95%,1200px);
@@ -372,17 +380,12 @@ button:active{
 
 /* Карта */
 
-.leaflet-container{
-
+.leaflet-container {
   width:100%;
-  height:600px;
-  border-radius:24px;
-  margin-bottom:30px;
-  overflow:hidden;
-  border:4px solid white;
-  box-shadow:0 20px 45px rgba(0,0,0,.18);
-
+  height:100%;
 }
+
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -630,10 +633,11 @@ body::after {
   right: 12px;
   bottom: 12px;
 
-  height: 72px;
+  height: 74px;
 
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   display: flex;
   justify-content: space-around;
@@ -642,30 +646,32 @@ body::after {
   border-radius: 22px;
 
   box-shadow:
-    0 8px 25px rgba(0,0,0,.15);
+    0 10px 30px rgba(0,0,0,.18);
 
-  z-index: 1000;
+  z-index: 9999;
 
   padding-bottom: env(safe-area-inset-bottom);
+
+  border: 1px solid rgba(255,255,255,.35);
 }
 
 /* Элемент меню */
 .bottom-item {
-
   flex: 1;
 
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   text-decoration: none;
 
-  color: #777;
+  color: #707070;
 
   font-size: 12px;
+  font-weight: 500;
 
-  padding: 8px 0;
-
-  transition: .2s;
-
+  transition: all .25s ease;
 }
 
 .bottom-item:active {
@@ -673,25 +679,21 @@ body::after {
 }
 
 
-.bottom-item.active div {
-  transform: translateY(-4px);
-}
-
-
-.bottom-item.active {
-  color: #0077ff;
-}
-
 /* Иконка */
 .bottom-item div {
   font-size: 24px;
-  line-height: 25px;
+  margin-bottom: 4px;
+  transition: all .25s ease;
 }
 
 /* Активная кнопка */
 .bottom-item.active {
-  color: #0077ff;
-  font-weight: 600;
+  color: #1976d2;
+  font-weight: 700;
+}
+
+.bottom-item.active div {
+  transform: translateY(-5px) scale(1.15);
 }
 
 .splash {
@@ -801,4 +803,141 @@ body::after {
 
 .splash.hide {
   opacity: 0;
+}
+
+/* ===========================
+   Полноэкранная карта
+=========================== */
+
+.map-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.fullscreen-map {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===========================
+   Кнопки управления картой
+=========================== */
+
+.map-btn,
+.gps-btn,
+.satellite-btn {
+
+  width:46px;
+  height:46px;
+
+  border-radius:50%;
+
+  border:none;
+
+  background:white;
+
+  color:#222;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:22px;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.25);
+
+  transition:.2s ease;
+
+  z-index:2000;
+}
+
+
+.map-btn:hover,
+.gps-btn:hover,
+.satellite-btn:hover {
+
+  transform:scale(1.08);
+
+}
+
+
+.map-btn:active,
+.gps-btn:active,
+.satellite-btn:active {
+
+  transform:scale(.95);
+
+}
+
+/* Кнопки справа сверху */
+
+.map-btn {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+  z-index: 3000;
+}
+
+.gps-btn {
+  position: absolute;
+  top: 75px;
+  right: 15px;
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+  z-index: 3000;
+}
+
+.satellite-btn {
+  position: absolute;
+  top: 130px;
+  right: 15px;
+
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+  z-index: 3000;
+}
+
+.search-input {
+  position: absolute;
+
+  top: 20px;
+
+  left: 55px;
+  right: 130px; /* Было 70px */
+
+  height: 46px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 23px;
+
+  background: white;
+
+  font-size: 15px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,.25);
+
+  z-index: 2999;
 }
