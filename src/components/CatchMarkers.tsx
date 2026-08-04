@@ -8,10 +8,13 @@ type Catch = {
   date: string;
   photo: string;
   location: string;
+  isPublic: boolean;
 };
 
 type Props = {
   catches: Catch[];
+  onEdit: (item: Catch) => void;
+  onDelete: (index: number) => void;
 };
 
 const fishIcon = L.icon({
@@ -21,7 +24,13 @@ const fishIcon = L.icon({
   popupAnchor: [0, -35],
 });
 
-export default function CatchMarkers({ catches }: Props) {
+export default function CatchMarkers({
+  catches,
+  onEdit,
+  onDelete,
+}: Props) {
+
+  console.log("CatchMarkers onDelete:", onDelete);
 
   const map = useMap();
 
@@ -78,6 +87,41 @@ export default function CatchMarkers({ catches }: Props) {
     <div>
       📍 {item.place}
     </div>
+
+    <div style={{ marginTop: "10px" }}>
+
+  <button
+  onClick={() => {
+    console.log("Нажали изменить:", item);
+    onEdit(item);
+  }}
+  style={{
+    marginRight: "5px",
+    padding: "6px 10px",
+    borderRadius: "8px",
+    border: "none",
+    background: "#4caf50",
+    color: "white",
+  }}
+>
+  ✏️ Изменить
+</button>
+
+
+  <button
+  onClick={() => onDelete(index)}
+    style={{
+      padding: "6px 10px",
+      borderRadius: "8px",
+      border: "none",
+      background: "#f44336",
+      color: "white",
+    }}
+  >
+    🗑️ Удалить
+  </button>
+
+</div>
 
   </div>
 </Popup>

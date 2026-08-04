@@ -6,33 +6,61 @@ import ProfilePage from "./pages/ProfilePage";
 import AddCatchPage from "./pages/AddCatchPage";
 import FeedPage from "./pages/FeedPage";
 import SplashScreen from "./components/SplashScreen";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import type { Catch } from "./types";
 
-type Catch = {
-  fishName: string
-  weight: string
-  place: string
-  date: string
-  photo: string
-  location: string
-  isPublic: boolean
+
+
+export default function App() {
+  return <AppContent />;
 }
 
+function AppContent() {
+  
 
-function App() {
+  const navigate = useNavigate();
 
 const [showSearch, setShowSearch] = useState(false)
 
 
+const [editCatch, setEditCatch] = useState<Catch | null>(null);
+
+
 const [catches, setCatches] = useState<Catch[]>(() => {
 
-    const saved = localStorage.getItem('fishpoint-catches')
+  const saved = localStorage.getItem('fishpoint-catches')
 
-    return saved ? JSON.parse(saved) : []
+  return saved ? JSON.parse(saved) : []
 
 })
 
 
+const handleDelete = (index: number) => {
+
+  const updated = catches.filter(
+    (_, i) => i !== index
+  );
+
+  setCatches(updated);
+
+  localStorage.setItem(
+    "fishpoint-catches",
+    JSON.stringify(updated)
+  );
+
+};
+
+const handleEdit = (item: Catch) => {
+
+  setEditCatch(item);
+
+  navigate("/add", {
+    state: {
+      editCatch: item
+    }
+  });
+
+};
   function saveCatches(data: Catch[]) {
 
     setCatches(data)
@@ -44,11 +72,11 @@ const [catches, setCatches] = useState<Catch[]>(() => {
 
   }
 
+console.log("App handleDelete:", handleDelete);
 
+return (
 
-  return (
-
-  <BrowserRouter>
+  <>
 
   <SplashScreen />
 
@@ -61,21 +89,35 @@ const [catches, setCatches] = useState<Catch[]>(() => {
     element={<ProfilePage catches={catches} />}
   />
 
-  <Route
-  path="/add"
-  element={
-    <AddCatchPage
-      addCatch={(data) => {
-        saveCatches([
-          ...catches,
-          data
-        ]);
-      }}
-    />
-  }
+<Route
+ path="/add"
+ element={
+   <AddCatchPage
+     editCatch={editCatch}
+     addCatch={(data) => {
+
+       if (editCatch) {
+
+         const updated = catches.map((item) =>
+           item === editCatch ? data : item
+         );
+
+         saveCatches(updated);
+         setEditCatch(null);
+
+       } else {
+
+         saveCatches([
+           ...catches,
+           data
+         ]);
+
+       }
+
+     }}
+   />
+ }
 />
-
-
 
 
 <Route
@@ -101,6 +143,8 @@ const [catches, setCatches] = useState<Catch[]>(() => {
   catches={catches}
   showSearch={showSearch}
   setShowSearch={setShowSearch}
+  onDelete={handleDelete}
+  onEdit={handleEdit}
 />
     </div>
   }
@@ -112,9 +156,8 @@ const [catches, setCatches] = useState<Catch[]>(() => {
 
     </div>
 
-  </BrowserRouter>
+  </>
 
   )
 }
 
-export default App

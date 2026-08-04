@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import FishMap from "../components/FishMap";
+import type { Catch } from "../types";
 
 const fishes = [
   "Щука",
@@ -21,12 +22,24 @@ const fishes = [
 ];
 
 type Props = {
-  addCatch: (data: any) => void;
+  addCatch: (data: Catch) => void;
+  editCatch?: Catch | null;
 };
 
-export default function AddCatchPage({ addCatch }: Props) {
+export default function AddCatchPage({
+  addCatch,
+  editCatch
+}: Props) {
 
 const routerLocation = useLocation();
+
+const navigate = useNavigate();
+
+const editData = routerLocation.state?.editCatch || editCatch;
+
+const isEdit = !!editData;
+
+console.log("EDIT CATCH:", editData);
 
 console.log("Переданные данные:", routerLocation.state);
 
@@ -43,32 +56,56 @@ const startLocation =
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [isPublic, setIsPublic] = useState(false);
 
+useEffect(() => {
+  if (editData) {
+    setFishName(editData.fishName);
+    setWeight(editData.weight);
+    setPlace(editData.place);
+    setDate(editData.date);
+    setPhoto(editData.photo);
+    setLocation(editData.location);
+    setIsPublic(editData.isPublic);
+
+    if (editData.location) {
+      const coords = editData.location
+        .split(",")
+        .map(Number) as [number, number];
+
+      setPosition(coords);
+    }
+  }
+}, [editData]);
+
 
   function save() {
 
-    addCatch({
-      fishName,
-      weight,
-      place,
-      date,
-      photo,
-      location,
-      isPublic,
-    });
+  const updatedCatch = {
+    fishName,
+    weight,
+    place,
+    date,
+    photo,
+    location,
+    isPublic,
+  };
 
+  addCatch(updatedCatch);
 
-    setFishName("");
-    setWeight("");
-    setPlace("");
-    setDate("");
-    setPhoto("");
-    setLocation("");
-    setPosition(null);
-    setIsPublic(false);
+  alert(
+    isEdit
+      ? "✏️ Улов изменён!"
+      : "🐟 Улов сохранён!"
+  );
 
-
-    alert("🐟 Улов сохранён!");
-  }
+  setFishName("");
+  setWeight("");
+  setPlace("");
+  setDate("");
+  setPhoto("");
+  setLocation("");
+  setPosition(null);
+  setIsPublic(false);
+}
 
 
 
@@ -140,7 +177,9 @@ alert("📍 Место получено");
   return (
     <div className="app">
 
-      <h1>➕ Добавить улов</h1>
+      <h1>
+  {isEdit ? "✏️ Изменить улов" : "➕ Добавить улов"}
+</h1>
 
       <div className="card">
 
@@ -209,7 +248,6 @@ alert("📍 Место получено");
         <input
   type="file"
   accept="image/*"
-  capture="environment"
   onChange={uploadPhoto}
 />
 
@@ -320,7 +358,7 @@ alert("📍 Место получено");
       />
     </span>
   </label>
-</div>
+</div>  
 
         <button onClick={save}>
           Сохранить улов 🐟

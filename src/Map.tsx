@@ -29,6 +29,7 @@ type Catch = {
   date: string;
   photo: string;
   location: string;
+  isPublic: boolean;
 };
 
 type Props = {
@@ -37,6 +38,7 @@ type Props = {
   setShowSearch: (show: boolean) => void;
   setLocation?: (location: string) => void;
   setPlace?: (place: string) => void;
+onDelete: (index: number) => void;
 };
 
 export default function Map({
@@ -45,7 +47,10 @@ export default function Map({
   setShowSearch,
   setLocation,
   setPlace,
+  onDelete,
 }: Props) {
+
+  console.log("Map onDelete:", onDelete);
 
   const navigate = useNavigate();
 
@@ -215,9 +220,14 @@ async function searchPlace() {
   setLocation={setLocation}
   setPlace={setPlace}
   setSelectedPosition={setSelectedPosition}
+
 />
 
-  <CatchMarkers catches={catches} />
+  <CatchMarkers
+  catches={catches}
+  onDelete={onDelete}
+  onEdit={() => {}}
+/>
 
   <TileLayer
     attribution={
@@ -233,93 +243,6 @@ async function searchPlace() {
   />
 
 </MapContainer>
-
-{selectedPosition && (
-  <div
-    style={{
-      position: "absolute",
-      bottom: "170px",
-      left: "15px",
-      zIndex: 3000,
-      background: "rgba(255,255,255,0.9)",
-      backdropFilter: "blur(10px)",
-      borderRadius: "50px",
-      padding: "8px",
-      boxShadow: "0 4px 15px rgba(0,0,0,.25)",
-      width: "auto",
-      textAlign: "center",
-    }}
-  >
-
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        gap: "10px",
-      }}
-    >
-      <button
-        onClick={() =>
-          navigate("/add", {
-            state: {
-              location: `${selectedPosition[0]}, ${selectedPosition[1]}`,
-            },
-          })
-        }
-        style={{
-          width: "46px",
-          height: "46px",
-          borderRadius: "50px",
-          border: "2px solid #fff",
-          background: "#2e7d32",
-          color: "#fff",
-          fontSize: "20px",
-          cursor: "pointer",
-          boxShadow: "0 2px 8px rgba(0,0,0,.25)",
-          transition: "0.2s",
-        }}
-      >
-        🎣
-      </button>
-
-      <button
-        style={{
-          width: "46px",
-          height: "46px",
-          borderRadius: "50px",
-          border: "2px solid #fff",
-          background: "#1976d2",
-          color: "#fff",
-          fontSize: "20px",
-          cursor: "pointer",
-          boxShadow: "0 2px 8px rgba(0,0,0,.25)",
-          transition: "0.2s",
-        }}
-      >
-        ✏️
-      </button>
-
-      <button
-        onClick={() => setSelectedPosition(null)}
-        style={{
-          width: "46px",
-          height: "46px",
-          borderRadius: "50px",
-          border: "2px solid #fff",
-          background: "#d32f2f",
-          color: "#fff",
-          fontSize: "20px",
-          cursor: "pointer",
-          boxShadow: "0 2px 8px rgba(0,0,0,.25)",
-          transition: "0.2s",
-        }}
-      >
-        🗑️
-      </button>
-    </div>
-  </div>
-)}
 
 </div>
 );
